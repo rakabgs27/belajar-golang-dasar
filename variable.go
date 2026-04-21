@@ -36,4 +36,11 @@ func main() {
 
 	fmt.Println(cars1)
 	fmt.Println(cars2)
+
+	cars := []string{
+		"Toyota",
+		"BMW",
+	}
+
+	fmt.Println(cars)
 }
