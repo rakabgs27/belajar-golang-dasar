@@ -612,6 +612,9 @@ runApp() dipanggil
         → recover() menangkap pesan panic
     → program lanjut berjalan (tidak crash)
 ```
+```
+PENGGANTI PENGGUNAAN TRY-CATCH
+```
 
 ---
 
