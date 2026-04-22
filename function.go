@@ -34,6 +34,34 @@ func sliceParameter(numbers []int) int {
 	return total
 }
 
+// Function as Value
+func getHello(name string) string {
+	return "Hello " + name
+}
+
+// Function as Parameter
+func sayHelloWithFunction(name string, function func(string) string) {
+	fmt.Println("Hello", function(name))
+}
+
+// Function Type Declaration
+type Filter func(string) string
+
+func filter(name string, filter Filter) {
+	fmt.Println("Hello", filter(name))
+}
+
+
+// Anonymous Function
+type Blacklist func(string) bool
+
+func isBlacklist(name string, blacklist Blacklist){
+	if blacklist(name) {
+		fmt.Println("You are blocked", name)
+	}else{
+		fmt.Println("You are not blocked", name)
+	}
+}
 
 func main() {
 	sayHello("Raka")
@@ -52,4 +80,22 @@ func main() {
 
 	// Slice Parameter dengan Function biasa
 	fmt.Println("total =", sliceParameter(sliceNumbers))
+
+	// Function as Value
+	hello := getHello
+	fmt.Println(hello("Raka"))
+
+	// Function as Parameter
+	sayHelloWithFunction("Bagas", getHello)
+
+	// Function Type Declaration
+	filter("Raka", getHello)
+
+	// Anonymous Function
+	isBlacklist("Raka", func(name string) bool {
+		return name == "Bagas"
+	})
+
+
+
 }
