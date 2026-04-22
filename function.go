@@ -11,8 +11,8 @@ func setIntroduction(name string, age int, address string) {
 	fmt.Println("Hello", name, "umur saya", age, "dan saya tinggal di", address)
 }
 
-func calculate(numberOne int, numberTwo int) int {
-	result := numberOne + numberTwo
+func calculate(numberOne int, numberTwo int) (result int) {
+	result = numberOne + numberTwo
 	return result
 }
 
