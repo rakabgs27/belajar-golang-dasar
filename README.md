@@ -216,6 +216,198 @@ copy(copySlice, newSlice)
 
 ---
 
+### 12. Map — `map.go`
+
+Map adalah struktur data **key-value pair**. Key harus unik, dan value bisa bertipe apa saja.
+
+```go
+person := map[string]string{
+    "name":    "Raka",
+    "address": "Jakarta",
+}
+
+fmt.Println(person["name"])     // akses nilai berdasarkan key
+fmt.Println(len(person))        // jumlah key-value
+```
+
+**Operasi penting pada Map:**
+
+| Operasi | Contoh |
+|---------|--------|
+| Akses nilai | `person["name"]` |
+| Tambah / ubah | `person["title"] = "Programmer"` |
+| Hapus key | `delete(person, "title")` |
+| Panjang map | `len(person)` |
+
+---
+
+### 13. If Expression — `if_expression.go`
+
+Percabangan kondisi menggunakan `if`, `else if`, dan `else`.
+
+```go
+var age = 15
+
+if age > 18 {
+    fmt.Println("Anda sudah dewasa")
+} else if age > 12 {
+    fmt.Println("Anda masih remaja")
+} else {
+    fmt.Println("Anda masih anak-anak")
+}
+```
+
+**If dengan Short Statement** — mendeklarasikan variabel langsung di dalam `if`:
+
+```go
+if length := len(name); length > 5 {
+    fmt.Println("Nama terlalu panjang")
+} else {
+    fmt.Println("Nama sudah benar")
+}
+```
+
+**If dengan Multiple Return Value** — menerima beberapa nilai sekaligus dari fungsi:
+
+```go
+func cekStatusGamer(name string) (int, bool, string) {
+    return 100, true, "Grandmaster"
+}
+
+if score, vip, level := cekStatusGamer("Raka"); vip {
+    fmt.Printf("User %s (Skor: %d) sedang online!", level, score)
+}
+```
+
+> Variabel yang dideklarasikan di short statement hanya berlaku **di dalam blok if** tersebut.
+
+---
+
+### 14. Switch Expression — `switch_expression.go`
+
+Alternatif `if-else` yang lebih rapi untuk kondisi dengan banyak kemungkinan nilai.
+
+```go
+var name = "Raka"
+
+// Switch biasa
+switch name {
+case "Raka":
+    fmt.Println("Hello Raka")
+case "John":
+    fmt.Println("Hello John")
+default:
+    fmt.Println("Hello World")
+}
+```
+
+**Switch dengan Short Statement:**
+
+```go
+switch length := len(name); length > 5 {
+case true:
+    fmt.Println("Nama terlalu panjang")
+case false:
+    fmt.Println("Nama sudah benar")
+}
+```
+
+**Switch tanpa kondisi** (seperti if-else):
+
+```go
+switch {
+case name == "Raka":
+    fmt.Println("Hello Raka")
+case name == "John":
+    fmt.Println("Hello John")
+default:
+    fmt.Println("Hello World")
+}
+```
+
+---
+
+### 15. For Expression — `for_expression.go`
+
+Go hanya memiliki satu keyword perulangan yaitu `for`, namun bisa digunakan dalam berbagai cara.
+
+**For standar (seperti C/Java):**
+
+```go
+for i := 0; i < 10; i++ {
+    fmt.Println("Hello World", i)
+}
+```
+
+**For dengan `range` pada Slice / Array:**
+
+```go
+names := []string{"Raka", "John", "Jane"}
+
+for index, value := range names {
+    fmt.Println("Index", index, "Value", value)
+}
+```
+
+**For dengan `range` pada Map:**
+
+```go
+newNamesMap := map[string]string{
+    "Raka": "Raka",
+    "John": "John",
+}
+
+for key, value := range newNamesMap {
+    fmt.Println("Key", key, "Value", value)
+}
+```
+
+> Gunakan `_` untuk mengabaikan salah satu dari `index` / `key` jika tidak dibutuhkan, contoh: `for _, value := range names`.
+
+---
+
+### 16. Function — `function.go`
+
+Function adalah blok kode yang bisa dipanggil berulang kali. Di Go, function didefinisikan dengan keyword `func`.
+
+**Function tanpa return value:**
+
+```go
+func sayHello(name string) {
+    fmt.Println("Hello", name)
+}
+```
+
+**Function dengan banyak parameter:**
+
+```go
+func setIntroduction(name string, age int, address string) {
+    fmt.Println("Hello", name, "umur saya", age, "dan saya tinggal di", address)
+}
+```
+
+**Function dengan named return value:**
+
+```go
+func calculate(numberOne int, numberTwo int) (result int) {
+    result = numberOne + numberTwo
+    return result
+}
+```
+
+**Memanggil function:**
+
+```go
+sayHello("Raka")
+
+age := calculate(10, 20)
+setIntroduction("Raka", age, "Jakarta")
+```
+
+> **Named return value** membuat kode lebih mudah dibaca karena nama variabel return sudah terdefinisi di signature function.
+
+---
+
 ## Struktur File
 
 ```
@@ -231,6 +423,11 @@ belajar-golang-dasar/
 ├── type_declaration.go  # Deklarasi tipe data baru
 ├── array.go             # Array
 ├── slice.go             # Slice
+├── map.go               # Map
+├── if_expression.go     # If expression
+├── switch_expression.go # Switch expression
+├── for_expression.go    # For loop
+├── function.go          # Function
 ├── go.mod               # Go module file
 └── README.md            # Dokumentasi ini
 ```
@@ -250,6 +447,11 @@ belajar-golang-dasar/
 9. `type_declaration.go` — Type declaration
 10. `array.go` — Array
 11. `slice.go` — Slice
+12. `map.go` — Map
+13. `if_expression.go` — If expression
+14. `switch_expression.go` — Switch expression
+15. `for_expression.go` — For loop
+16. `function.go` — Function
 
 ---
 
