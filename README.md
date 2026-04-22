@@ -408,6 +408,213 @@ setIntroduction("Raka", age, "Jakarta")
 
 ---
 
+### 17. Variadic Function & Slice Parameter — `function.go`
+
+**Variadic Function** memungkinkan function menerima jumlah argumen yang tidak terbatas menggunakan `...`.
+
+```go
+func variadicFunction(numbers ...int) int {
+    total := 0
+    for _, number := range numbers {
+        total += number
+    }
+    return total
+}
+
+// Memanggil dengan argumen langsung
+variadicFunction(10, 20, 30, 40, 50)
+
+// Memanggil dengan slice menggunakan spread operator (...)
+sliceNumbers := []int{10, 20, 30, 40, 50}
+variadicFunction(sliceNumbers...)
+```
+
+**Slice Parameter** menerima slice secara langsung:
+
+```go
+func sliceParameter(numbers []int) int {
+    total := 0
+    for _, number := range numbers {
+        total += number
+    }
+    return total
+}
+```
+
+| | Variadic `...int` | Slice `[]int` |
+|---|---|---|
+| Pemanggilan | `fn(1, 2, 3)` atau `fn(slice...)` | `fn(slice)` |
+| Fleksibilitas | Lebih fleksibel | Harus berupa slice |
+
+---
+
+### 18. Function as Value, Parameter & Type Declaration — `function.go`
+
+Di Go, **function adalah first-class citizen** — bisa disimpan ke variabel, dikirim sebagai parameter, dan dideklarasikan sebagai tipe.
+
+**Function as Value** — menyimpan function ke variabel:
+
+```go
+func getHello(name string) string {
+    return "Hello " + name
+}
+
+hello := getHello          // simpan ke variabel
+fmt.Println(hello("Raka")) // panggil dari variabel
+```
+
+**Function as Parameter** — mengirim function sebagai argumen:
+
+```go
+func sayHelloWithFunction(name string, function func(string) string) {
+    fmt.Println("Hello", function(name))
+}
+
+sayHelloWithFunction("Bagas", getHello)
+```
+
+**Function Type Declaration** — membuat alias tipe untuk function:
+
+```go
+type Filter func(string) string
+
+func filter(name string, filter Filter) {
+    fmt.Println("Hello", filter(name))
+}
+```
+
+**Anonymous Function** — function tanpa nama, langsung ditulis sebagai argumen:
+
+```go
+type Blacklist func(string) bool
+
+isBlacklist("Raka", func(name string) bool {
+    return name == "Bagas"
+})
+```
+
+---
+
+### 19. Closure — `closure.go`
+
+Closure adalah function yang **menangkap (capture) variabel dari scope luar**. Perubahan pada variabel luar akan terpengaruh jika diakses langsung.
+
+```go
+counter := 0
+increment := func() {
+    counter++   // menangkap variabel counter dari luar
+    fmt.Println("increment")
+}
+
+increment()
+increment()
+increment()
+fmt.Println(counter) // output: 3
+```
+
+**Perbedaan capture by reference vs copy:**
+
+```go
+counter2 := 0
+increment2 := func(c int) { // nilai DISALIN ke parameter
+    c++
+}
+
+increment2(counter2)
+increment2(counter2)
+fmt.Println(counter2) // output: 0 (tidak berubah!)
+```
+
+| | Capture langsung | Melalui parameter |
+|---|---|---|
+| Cara kerja | Referensi ke variabel asli | Salinan nilai |
+| Efek ke variabel luar | Berubah | Tidak berubah |
+
+---
+
+### 20. Defer — `defer.go`
+
+`defer` digunakan untuk menunda eksekusi sebuah function hingga **function pemanggil selesai**. Sering digunakan untuk cleanup (menutup file, koneksi, dll).
+
+```go
+func logging() {
+    fmt.Println("Logging")
+}
+
+func runApplication() {
+    defer logging() // akan dieksekusi SETELAH runApplication() selesai
+    fmt.Println("Run Application")
+}
+
+// Output:
+// Run Application
+// Logging
+```
+
+> `defer` berjalan seperti **LIFO (Last In, First Out)** jika ada lebih dari satu `defer` dalam satu function.
+
+---
+
+### 21. Panic — `panic.go`
+
+`panic` digunakan untuk **menghentikan eksekusi program** secara paksa saat terjadi kondisi yang tidak bisa ditangani. Program akan berhenti dan menampilkan pesan error.
+
+```go
+func runApp(error bool) {
+    defer endApp()
+    if error {
+        panic("Error") // program berhenti di sini
+    } else {
+        fmt.Println("App Running")
+    }
+}
+
+func main() {
+    runApp(true) // akan memicu panic
+}
+```
+
+> Meskipun `panic` dipanggil, fungsi yang di-`defer` **tetap akan dieksekusi** sebelum program benar-benar berhenti.
+
+---
+
+### 22. Recover — `recover.go`
+
+`recover` digunakan untuk **menangkap panic** agar program tidak crash. Harus dipanggil di dalam fungsi yang di-`defer`.
+
+```go
+func endApp() {
+    fmt.Println("End App")
+    message := recover() // menangkap pesan dari panic
+    fmt.Println("Terjadi Error", message)
+}
+
+func runApp(error bool) {
+    defer endApp() // recover dipanggil di dalam defer ini
+    if error {
+        panic("Error")
+    } else {
+        fmt.Println("App Running")
+    }
+}
+
+func main() {
+    runApp(false) // program berjalan normal
+}
+```
+
+**Alur kerja Defer + Panic + Recover:**
+
+```
+runApp() dipanggil
+    → panic terpicu
+    → defer endApp() dijalankan
+        → recover() menangkap pesan panic
+    → program lanjut berjalan (tidak crash)
+```
+
+---
+
 ## Struktur File
 
 ```
@@ -427,7 +634,11 @@ belajar-golang-dasar/
 ├── if_expression.go     # If expression
 ├── switch_expression.go # Switch expression
 ├── for_expression.go    # For loop
-├── function.go          # Function
+├── function.go          # Function, variadic, function as value/parameter/type
+├── closure.go           # Closure
+├── defer.go             # Defer
+├── panic.go             # Panic
+├── recover.go           # Recover
 ├── go.mod               # Go module file
 └── README.md            # Dokumentasi ini
 ```
@@ -451,7 +662,11 @@ belajar-golang-dasar/
 13. `if_expression.go` — If expression
 14. `switch_expression.go` — Switch expression
 15. `for_expression.go` — For loop
-16. `function.go` — Function
+16. `function.go` — Function, variadic, function as value/parameter/type, anonymous function
+17. `closure.go` — Closure
+18. `defer.go` — Defer
+19. `panic.go` — Panic
+20. `recover.go` — Recover
 
 ---
 
